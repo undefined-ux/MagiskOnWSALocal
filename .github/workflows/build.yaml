@@ -1,0 +1,23 @@
+name: Issue moderator
+
+on:
+    schedule:
+    - cron: '0 0 * * *'
+    push:
+      branches: [master]
+
+jobs:
+  autoclose:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v3
+     - name: build
+       run: |
+           ./scripts/run.sh --arch x64 --release-type retail --magisk-ver stable --gapps-brand MindTheGapps --gapps-variant pico --root-sol magisk --compress-format 7z
+           ./scripts/run.sh --arch arm64 --release-type retail --magisk-ver stable --gapps-brand MindTheGapps --gapps-variant pico --root-sol magisk --compress-format 7z
+     - name: upload
+       uses: actions/upload-artifact@v3
+       with:
+        name: File
+        path: output/*.zip
+        retention-days: 5
